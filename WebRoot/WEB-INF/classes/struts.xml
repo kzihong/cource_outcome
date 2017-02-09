@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- 设置成开发者模式 -->
+	<constant name="struts.devMode" value="true"></constant>
+	<constant name="struts.multipart.maxSize" value="1048576000" />
+	<!-- 设置国际化文件 -->
+	<constant name="struts.custom.i18.resources" value="classpath:fileUploadMessage.properties"></constant>
+	<constant name="struts.i18n.encoding" value="UTF-8"/>
+	<constant name="struts.multipart.parser" value="pell"/>
+	<package name="main" namespace="/" extends="struts-default">
+		<!-- 配置拦截器 -->
+		<interceptors>
+			<interceptor name="loginInterceptor" class="com.gdut.course.interceptor.LoginInterceptor">
+			</interceptor>
+			<interceptor-stack name="myStack">
+				<!--<interceptor-ref name="loginInterceptor"></interceptor-ref>-->
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<!-- 配置默认拦截器 -->
+		<default-interceptor-ref name="myStack"></default-interceptor-ref>
+		<!-- 异常处理页面 -->
+		<global-results>
+			<result name="error" type="redirect">/index_share.jsp</result>
+			<result name="homePage">/index_share.jsp</result>
+			<result name="input" type="redirect">/view/error.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<!-- 发生异常，重定向到首页 -->
+			<exception-mapping result="error" exception="com.gdut.course.exception.ErrorException"></exception-mapping>
+		</global-exception-mappings>
+		
+		<action name="user_*" class="user" method="{1}">
+			<!-- <result name="homePage"></result> -->
+			<result name="admin">/WEB-INF/jsps/admin/main.jsp</result>
+			<result name="homePage">/index_share.jsp</result>
+		</action>
+		<action name="file_*" class="file" method="{1}">
+			<interceptor-ref name="myStack"></interceptor-ref>  
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">1000*1024*1024</param>
+				<param name="allowedTypes">
+					image/gif,image/png,image/jpg,image/jpeg,image/pjpeg,text/plain,text/xml,video/x-ms-wmv,application/octet-stream
+					,multipart/form-data,text/html
+				</param> 
+				<param name="includeMethods">upload,upload_html</param>
+			</interceptor-ref>
+			<result name="fileList">/WEB-INF/jsps/admin/content.jsp</result>
+			<result name="photo">/WEB-INF/jsps/admin/photo.jsp</result>
+		</action>
+		<action name="catalog_*" class="catalog" method="{1}">
+			<result name="homePage">/WEB-INF/jsps/user/share/homePage.jsp</result>
+			<result name="information">/WEB-INF/jsps/user/share/information.jsp</result>
+			<result name="source">/WEB-INF/jsps/user/share/source.jsp</result>
+			<result name="project_video">/WEB-INF/jsps/user/share/project_video.jsp</result>
+			<result name="example">/WEB-INF/jsps/user/share/example.jsp</result>
+			<result name="creative">/WEB-INF/jsps/user/share/creative.jsp</result>
+			<result name="sjjx">/WEB-INF/jsps/user/share/sjjx.jsp</result>
+			<result name="kzzy">/WEB-INF/jsps/user/share/kzzy.jsp</result>
+			<result name="comment">/WEB-INF/jsps/user/declare/comment.jsp</result>
+			<result name="courser">/WEB-INF/jsps/user/declare/courser.jsp</result>
+			<result name="creative_declare">/WEB-INF/jsps/user/declare/creative.jsp</result>
+			<result name="declaration">/WEB-INF/jsps/user/declare/declaration.jsp</result>
+			<result name="description">/WEB-INF/jsps/user/declare/description.jsp</result>
+			<result name="group">/WEB-INF/jsps/user/declare/group.jsp</result>
+			<result name="homePage_declare">/WEB-INF/jsps/user/declare/homePage.jsp</result>
+			<result name="measure">/WEB-INF/jsps/user/declare/measure.jsp</result>
+			<result name="outcome">/WEB-INF/jsps/user/declare/outcome.jsp</result>
+			<result name="resource">/WEB-INF/jsps/user/declare/resource.jsp</result>
+			<result name="setup">/WEB-INF/jsps/user/declare/setup.jsp</result>
+			<result name="tutors">/WEB-INF/jsps/user/declare/tutors.jsp</result>
+			<result name="website">/WEB-INF/jsps/user/declare/website.jsp</result>
+			<result name="side">/WEB-INF/jsps/admin/side.jsp</result>
+		</action>
+		<action name="online_*" class="online" method="{1}">
+			<result name="contect">/WEB-INF/jsps/user/share/contect.jsp</result>
+			<result name="questionList">/view/iframe1.jsp</result>
+			<result name="questionInfo">/view/question.jsp</result>
+			<result name="workInfo">/view/work.jsp</result>
+		</action>
+	</package>
+</struts>
